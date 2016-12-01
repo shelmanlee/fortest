@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>js获取编辑框游标的位置</title>
+    <script src="http://www.w3school.com.cn/jquery/jquery-1.11.1.min.js" type="text/javascript"></script>
+    <style type="text/css">
+        #Div1, #Div2
+        {
+            width: 500px;
+            height: 100px;
+            border: solid 1px black;
+        }
+    </style>
+</head>
+<body>
+<button type="button" id="ddddd" >
+    插入字符
+</button>
+<div contentEditable="true" style="height:50px; border:2px solid red;" id="test">
+dasdsadasdasdasd<img src="http://www.cnblogs.com/images/xml.gif" alt="订阅">dasdasdasdasdsadsa
+</div>
+ 
+<div>test</div>
+</body>
+</html>
+<script>
+$('#ddddd').click(function(){
+    document.getElementById('test').focus(); 
+    insertHtmlAtCaret('<b>testMsg</b>');
+})
+function insertHtmlAtCaret(html) {
+    var sel, range;
+    if (window.getSelection) {
+        sel = window.getSelection();
+        if (sel.getRangeAt && sel.rangeCount) {
+                range = sel.getRangeAt(0);
+                range.deleteContents();
+                var el = document.createElement("div");
+                el.innerHTML = html;
+                var frag = document.createDocumentFragment(), node, lastNode;
+                while ( (node = el.firstChild) ) {
+                lastNode = frag.appendChild(node);
+            }
+            range.insertNode(frag);
+            if (lastNode) {
+                range = range.cloneRange();
+                range.setStartAfter(lastNode);
+                range.collapse(true);
+                sel.removeAllRanges();
+                sel.addRange(range);
+				range.setSelectionRange(2,8);
+            }
+        }
+    } else if (document.selection && document.selection.type != "Control") {
+        // IE < 9
+        document.selection.createRange().pasteHTML(html);
+    }
+}
+</script>
